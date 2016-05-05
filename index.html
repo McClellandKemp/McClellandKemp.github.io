@@ -37,7 +37,16 @@
     
     <div id="image-map"></div>
     <pre id='coordinates' class='ui-coordinates'></pre>
-   
+        <div class="container">
+      <p>Select a keycat.</p>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Available Keycats
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Chips</a></li>
+        </ul>
+      </div>
+    </div>
 
      <script type="text/javascript">
 
@@ -89,7 +98,7 @@
     var map = L.map('image-map', {
       minZoom: 1,
       maxZoom: 4,
-      center: [-550, 270],
+      center: [-650, 270],
       zoom: 1,
       crs: L.CRS.Simple
     });
