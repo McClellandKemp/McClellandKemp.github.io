@@ -1,21 +1,87 @@
  <!DOCTYPE html>
-<html>
-  <!-- See also: http://kempe.net/blog/2014/06/14/leaflet-pan-zoom-image.html -->
+<html lang="en">
   <head>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"></script>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     <style>
     #image-map {
       width: 100%;
-      height: 650px;
+      height: 700px;
       border: 1px solid #ccc;
       margin-bottom: 10px;
     }
+ 
+    </style>
+    <style>
+    pre.ui-coordinates {
+      position:absolute;
+      top:10px;
+      right:10px;
+      padding:5px 10px;
+      background:rgba(0,0,0,0.5);
+      color:#fff;
+      font-size:11px;
+      line-height:18px;
+      border-radius:3px;
+      }
     </style>
   </head>
   <body>
+    <script src="../plugins/Leaflet.heat-gh-pages/dist/leaflet-heat.js"></script>
+    <script src="../plugins/Leaflet.Coordinates-master/dist/Leaflet.Coordinates-0.1.5.src.js"></script>
+    
     <div id="image-map"></div>
+    <pre id='coordinates' class='ui-coordinates'></pre>
+   
 
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+     <script type="text/javascript">
+
+    // JK Pop up image viewer script- By JavaScriptKit.com
+    // Visit JavaScript Kit (http://javascriptkit.com)
+    // for free JavaScript tutorials and scripts
+    // This notice must stay intact for use
+
+    var popbackground="lightskyblue" //specify backcolor or background image for pop window
+    var windowtitle="Image Window"  //pop window title
+
+    function detectexist(obj){
+    return (typeof obj !="undefined")
+    }
+
+    function jkpopimage(imgpath, popwidth, popheight, textdescription){
+
+    function getpos(){
+    leftpos=(detectexist(window.screenLeft))? screenLeft+document.body.clientWidth/2-popwidth/2 : detectexist(window.screenX)? screenX+innerWidth/2-popwidth/2 : 0
+    toppos=(detectexist(window.screenTop))? screenTop+document.body.clientHeight/2-popheight/2 : detectexist(window.screenY)? screenY+innerHeight/2-popheight/2 : 0
+    if (window.opera){
+    leftpos-=screenLeft
+    toppos-=screenTop
+    }
+    }
+
+    getpos()
+    var winattributes='width='+popwidth+',height='+popheight+',resizable=yes,left='+leftpos+',top='+toppos
+    var bodyattribute=(popbackground.indexOf(".")!=-1)? 'background="'+popbackground+'"' : 'bgcolor="'+popbackground+'"'
+    if (typeof jkpopwin=="undefined" || jkpopwin.closed)
+    jkpopwin=window.open("","",winattributes)
+    else{
+    //getpos() //uncomment these 2 lines if you wish subsequent popups to be centered too
+    //jkpopwin.moveTo(leftpos, toppos)
+    jkpopwin.resizeTo(popwidth, popheight+30)
+    }
+    jkpopwin.document.open()
+    jkpopwin.document.write('<html><title>'+windowtitle+'</title><body '+bodyattribute+'><img src="'+imgpath+'" style="margin-bottom: 0.5em"><br />'+textdescription+'</body></html>')
+    jkpopwin.document.close()
+    jkpopwin.focus()
+    }
+
+    </script>
+    <script src="scripts/plotdata.js"></script>
     <script>
     // Using leaflet.js to pan and zoom a big image.
     // See also: http://kempe.net/blog/2014/06/14/leaflet-pan-zoom-image.html
@@ -23,13 +89,13 @@
     var map = L.map('image-map', {
       minZoom: 1,
       maxZoom: 4,
-      center: [0, 0],
+      center: [-550, 270],
       zoom: 1,
       crs: L.CRS.Simple
     });
     // dimensions of the image
-    var w = 2000,
-        h = 2500,
+    var w = 4000,
+        h = 5500,
         url = 'http://i.imgur.com/j6yH5E3.png';
     // calculate the edges of the image, in coordinate space
     var southWest = map.unproject([0, h], map.getMaxZoom()-1);
@@ -40,7 +106,51 @@
     L.imageOverlay(url, bounds).addTo(map);
     // tell leaflet that the map is exactly as big as the image
     map.setMaxBounds(bounds);
+    
+    var coordinates = document.getElementById('coordinates');
+    function onMouseMove(e) {
+    coordinates.innerHTML = 'y: ' + e.latlng.lat + '<br />x: ' + e.latlng.lng;
+}
+    map.on('mousemove', onMouseMove);
+    
+    var marker = L.marker([-435, 360]).addTo(map);
+    
+    marker.bindPopup("Popup content");
+        marker.on('mouseover', function (e) {
+            this.openPopup();
+        });
+        marker.on('mouseout', function (e) {
+            this.closePopup();
+        });
+    
+    marker.bindPopup("<img src=http://media.nj.com/ledgerupdates_impact/photo/2012/07/nj-man-aislejpg-827e000e45195dd0.jpg height=200 width=240>");
+    
+    addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
+    
+     var heat = L.heatLayer(addressPoints, blur = 5).addTo(map);
     </script>
+    
+    <script>
+     function myFunction() {
+       document.getElementById("myDropdown").classList.toggle("show");
+     }
 
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    </script>
+    
+    
   </body>
-</html>
+</html>  

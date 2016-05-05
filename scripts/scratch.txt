@@ -1,0 +1,22 @@
+    var addressPoints = [[-10, -10] ]
+    addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
+    
+     var heat = L.heatLayer(addressPoints).addTo(map);
+    
+    var myLines = [{
+      "type": "LineString",
+      "coordinates": [[0, 0], [10, 0], [10, -10]]
+    }];
+    L.geoJson(myLines).addTo(map);
+    
+    
+     <div class="container">
+      <p>Select a keycat.</p>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Available Keycats
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Chips</a></li>
+        </ul>
+      </div>
+    </div>
